@@ -7,6 +7,7 @@
 
 #include <iostream> 
 #include <stdio.h> 
+#include <time.h>
 
 // Indica los namespaces ques se estan usando para que la sintaxis quede mas limpia
 using namespace std;
@@ -23,7 +24,7 @@ int main()
 	int opc;
 	while (true)
 	{
-		cout << "\n\nIntroduce el modo que quieres ejecutar" << endl;
+		cout << "Introduce el modo que quieres ejecutar" << endl;
 		cout << "\t 1 -> Binarizacion" << endl;
 		cout << "\t 2 -> Histograma de frecuencias" << endl;
 		cout << "\t 0 -> Salir" << endl;
@@ -55,6 +56,9 @@ void binarizacion()
 */
 void binarizacion(int p)
 {
+	clock_t inicio, fin;
+	inicio = clock();
+
 	IplImage* src; // Imagen de color base 
 	IplImage* colorThresh; // Contendrá la imagen de color binarizada 
 	IplImage* gray; // Contendrá la imagen convertida en escala de grises 
@@ -69,7 +73,7 @@ void binarizacion(int p)
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
 	src = cvLoadImage(PATH_IMAGEN, 1); // Cargamos imagen de color 
 	colorThresh = cvCloneImage( src ); // Copiamos esa imagen de color 
-	gray=cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); // La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
+	gray = cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); // La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
 	cvCvtColor( src, gray, CV_BGR2GRAY ); // Pasamos la imagen de color a escala de grises 
 	grayThresh = cvCloneImage( gray ); // Copiamos la imagen en escala de grises (truco anterior) 
 	cvNamedWindow("src", 1 ); // Representamos la imagen de color 
@@ -81,11 +85,13 @@ void binarizacion(int p)
 	cvNamedWindow("colorThresh", 1 ); // Representamos la imagen de color binarizada 
 	cvShowImage("colorThresh", colorThresh );
 	cvNamedWindow("grayThresh", 1 ); // Representamosla imagen de intensidad binarizada 
-
 	cvSaveImage("C:/lena_std1.tif", gray); // Guardamos la imagen  
 	cvSaveImage("C:/lena_std2.tif", grayThresh); // Guardamos la imagen  
 	cvShowImage("grayThresh", grayThresh );
 	
+	fin = clock();
+	cout << "\t\tTiempo transcurrido en binarizar: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+
 	cvWaitKey(0); // Pulsamos una tecla para terminar 
 	
 	// Destruimos las ventanas y eliminamos las imagenes
@@ -104,6 +110,9 @@ void binarizacion(int p)
 */
 void histograma()
 {
+	clock_t inicio, fin;
+	inicio = clock();
+
 	// Se carga la imagen 
 	Mat src = imread(PATH_IMAGEN, 1 );
 	if(!src.data) return;
@@ -150,6 +159,9 @@ void histograma()
 	//Se muestra el resultado
 	cv::imshow("Resultado histograma", histImage );
 	cv::imshow("Imagen", src );
+
+	fin = clock();
+	cout << "\t\tTiempo transcurrido en binarizar: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0);
 	cvDestroyAllWindows();
