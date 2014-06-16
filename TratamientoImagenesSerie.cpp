@@ -139,8 +139,9 @@ void histograma()
 	calcHist( &bgr_planes[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate );
-	if (DEBUG)
-	{
+
+	if (DEBUG){
+		//Salida de los histogramas
 		cout << "B = "<< endl << " "  << b_hist << endl << endl;
 		cout << "G = "<< endl << " "  << g_hist << endl << endl;
 		cout << "R = "<< endl << " "  << r_hist << endl << endl; 
