@@ -69,40 +69,42 @@ void binarizacion(int p)
 		threshold = p; // Definimos el valor umbral 
 	else
 		threshold = 160; // Definimos el valor umbral
-	int maxValue = 255; // Dfinimos el valor máximo 
+	int maxValue = 255; // Definimos el valor máximo 
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
 	src = cvLoadImage(PATH_IMAGEN, 1); // Cargamos imagen de color 
 	colorThresh = cvCloneImage( src ); // Copiamos esa imagen de color 
-	gray = cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); // La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
+	gray = cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); 
+		// La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
 	cvCvtColor( src, gray, CV_BGR2GRAY ); // Pasamos la imagen de color a escala de grises 
-	grayThresh = cvCloneImage( gray ); // Copiamos la imagen en escala de grises (truco anterior) 
-	cvNamedWindow("src", 1 ); // Representamos la imagen de color 
-	cvShowImage("src", src );
-	cvNamedWindow("gray", 1 ); // Representamos la imagen de intensidad 
-	cvShowImage("gray", gray );
+	grayThresh = cvCloneImage( gray ); // Copiamos la imagen en escala de grises
+	
+	cvNamedWindow("src", 1 ); 
+	cvShowImage("src", src ); // Representamos la imagen de color 
+
+	cvNamedWindow("gray", 1 ); 
+	cvShowImage("gray", gray ); // Representamos la imagen de intensidad
+
 	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
-	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de intensidad 
-	cvNamedWindow("colorThresh", 1 ); // Representamos la imagen de color binarizada 
-	cvShowImage("colorThresh", colorThresh );
-	cvNamedWindow("grayThresh", 1 ); // Representamosla imagen de intensidad binarizada 
-	cvSaveImage("C:/lena_std1.tif", gray); // Guardamos la imagen  
-	cvSaveImage("C:/lena_std2.tif", grayThresh); // Guardamos la imagen  
-	cvShowImage("grayThresh", grayThresh );
+	cvNamedWindow("colorThresh", 1 );
+	cvShowImage("colorThresh", colorThresh ); // Representamos la imagen de color binarizada 
+
+	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
+	cvNamedWindow("grayThresh", 1 );
+	cvShowImage("grayThresh", grayThresh ); // Representamosla imagen de intensidad binarizada 
 	
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en binarizar: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	cout << "\t\tTiempo transcurrido en binarizar: " 
+		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar 
 	
 	// Destruimos las ventanas y eliminamos las imagenes
-	cvDestroyWindow("src");
-	cvDestroyWindow("colorThresh");
-	cvDestroyWindow("gray");
-	cvDestroyWindow("grayThresh");
+	cvDestroyAllWindows();
 	cvReleaseImage( &src );
 	cvReleaseImage( &colorThresh );
 	cvReleaseImage( &gray );
 	cvReleaseImage( &grayThresh );
+	
 }
 
 /*
@@ -151,9 +153,18 @@ void histograma()
 	// Se dibuja para cada canal de RGB 
 	for(int i = 1; i < histSize; i++ )
 	{
-		cv::line( histImage, Point( bin_w*(i-1), hist_h - cvRound(b_hist.at<float>(i-1)) ),Point( bin_w*(i), hist_h - cvRound(b_hist.at<float>(i)) ), Scalar( 255, 0, 0), 2,8, 0 );
-		cv::line( histImage, Point( bin_w*(i-1), hist_h - cvRound(g_hist.at<float>(i-1)) ),Point( bin_w*(i), hist_h - cvRound(g_hist.at<float>(i)) ),Scalar( 0, 255, 0), 2, 8,0 );
-		cv::line( histImage, Point( bin_w*(i-1), hist_h - cvRound(r_hist.at<float>(i-1)) ),Point( bin_w*(i), hist_h - cvRound(r_hist.at<float>(i)) ),Scalar( 0, 0, 255), 2, 8, 0 );
+		cv::line( histImage, 
+			Point( bin_w*(i-1), hist_h - cvRound(b_hist.at<float>(i-1)) ),
+			Point( bin_w*(i), hist_h - cvRound(b_hist.at<float>(i)) ), 
+			Scalar( 255, 0, 0), 2,8, 0 );
+		cv::line( histImage, 
+			Point( bin_w*(i-1), hist_h - cvRound(g_hist.at<float>(i-1)) ),
+			Point( bin_w*(i), hist_h - cvRound(g_hist.at<float>(i)) ),
+			Scalar( 0, 255, 0), 2, 8,0 );
+		cv::line( histImage, 
+			Point( bin_w*(i-1), hist_h - cvRound(r_hist.at<float>(i-1)) ),
+			Point( bin_w*(i), hist_h - cvRound(r_hist.at<float>(i)) ),
+			Scalar( 0, 0, 255), 2, 8, 0 );
 	}
 
 	//Se muestra el resultado
@@ -161,8 +172,13 @@ void histograma()
 	cv::imshow("Imagen", src );
 
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en binarizar: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	cout << "\t\tTiempo transcurrido en calcular el histograma: " 
+		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-	cvWaitKey(0);
-	cvDestroyAllWindows();
+	cvWaitKey(0); // Pulsamos una tecla para terminar
+	cvDestroyAllWindows(); // Destruimos las ventanas
+	
+	// Liberamos de la memoria las imagenes
+	src.release(); 
+	histImage.release();
 }
