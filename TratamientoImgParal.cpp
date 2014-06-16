@@ -128,15 +128,12 @@ void histogramaParalelo()
 	// Se cargar imagen 
 	Mat src = imread(PATH_IMAGEN, 1 );
 	if(!src.data) return;
-	
-	// Se convierte a tipo GpuMat para que la imagen pueda ser tratada por la GPU
-	//GpuMat gSrc = GpuMat(src);
 
 	// Se separa las imagenes en los 3 colores ( R,G,B )
 	vector<Mat> bgr_planes;
 	split( src, bgr_planes );
 
-	// Se guardan en variables separadas
+	// Se guardan en variables separadas de tipo GpuMat que carga el contenido en la GPU
 	GpuMat b_src(bgr_planes[0]);
 	GpuMat g_src(bgr_planes[1]);
 	GpuMat r_src(bgr_planes[2]);
@@ -144,17 +141,17 @@ void histogramaParalelo()
 	// Se establece el contador 
 	int histSize = 256;
 
-	GpuMat b_hist, g_hist, r_hist;
+	GpuMat b_hist_gpu, g_hist_gpu, r_hist_gpu;
 	
 	// Se calculan los histogramas
-	cv::gpu::calcHist(b_src, b_hist);
-	cv::gpu::calcHist(g_src, g_hist);
-	cv::gpu::calcHist(r_src, r_hist);
+	cv::gpu::calcHist(b_src, b_hist_gpu);
+	cv::gpu::calcHist(g_src, g_hist_gpu);
+	cv::gpu::calcHist(r_src, r_hist_gpu);
 
 	//Se vuelven a comvertir en Matrices normales tras calcular sus histogramas
-	Mat b_hist_f(b_hist);
-	Mat g_hist_f(g_hist);
-	Mat r_hist_f(r_hist);
+	Mat b_hist(b_hist_gpu);
+	Mat g_hist(g_hist_gpu);
+	Mat r_hist(r_hist_gpu);
 
 	// Se dibuja el histograma 
 	int hist_w = 512; 
@@ -163,24 +160,24 @@ void histogramaParalelo()
 
 	cv::Mat histImage( hist_h, hist_w, CV_8UC3, cv::Scalar( 0,0,0) ); 
 
-	cv::normalize(b_hist_f, b_hist_f, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
-	cv::normalize(g_hist_f, g_hist_f, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
-	cv::normalize(r_hist_f, r_hist_f, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+	cv::normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+	cv::normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+	cv::normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 
 	// Dibuja para cada canal de RGB 
 	for(int i = 1; i < histSize; i++ )
 	{
 		cv::line( histImage,
-			Point( bin_w*(i-1), hist_h - cvRound(b_hist_f.at<float>(i-1)) ), 
-			Point( bin_w*(i), hist_h - cvRound(b_hist_f.at<float>(i)) ), 
+			Point( bin_w*(i-1), hist_h - cvRound(b_hist.at<float>(i-1)) ), 
+			Point( bin_w*(i), hist_h - cvRound(b_hist.at<float>(i)) ), 
 			Scalar( 255, 0, 0), 2,8, 0 );
 		cv::line( histImage, 
-			Point( bin_w*(i-1), hist_h - cvRound(g_hist_f.at<float>(i-1)) ), 
-			Point( bin_w*(i), hist_h - cvRound(g_hist_f.at<float>(i)) ), 
+			Point( bin_w*(i-1), hist_h - cvRound(g_hist.at<float>(i-1)) ), 
+			Point( bin_w*(i), hist_h - cvRound(g_hist.at<float>(i)) ), 
 			Scalar( 0, 255, 0), 2, 8,0 );
 		cv::line( histImage, 
-			Point( bin_w*(i-1), hist_h - cvRound(r_hist_f.at<float>(i-1)) ), 
-			Point( bin_w*(i), hist_h - cvRound(r_hist_f.at<float>(i)) ), 
+			Point( bin_w*(i-1), hist_h - cvRound(r_hist.at<float>(i-1)) ), 
+			Point( bin_w*(i), hist_h - cvRound(r_hist.at<float>(i)) ), 
 			Scalar( 0, 0, 255), 2, 8, 0 );
 	}
 
