@@ -71,26 +71,27 @@ void binarizacion(int p)
 		threshold = 160; // Definimos el valor umbral
 	int maxValue = 255; // Definimos el valor máximo 
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
-	src = cvLoadImage(PATH_IMAGEN, 1); // Cargamos imagen de color 
-	colorThresh = cvCloneImage( src ); // Copiamos esa imagen de color 
-	gray = cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); 
+
+	src = cvLoadImage(PATH_IMAGEN, CV_LOAD_IMAGE_COLOR); // Cargamos la imagen de color 
+	colorThresh = cvCloneImage(src); // Copiamos esa imagen de color 
+	gray = cvCreateImage(cvSize(src->width, src->height), IPL_DEPTH_8U, 1); 
 		// La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
-	cvCvtColor( src, gray, CV_BGR2GRAY ); // Pasamos la imagen de color a escala de grises 
+	cvCvtColor(src, gray, CV_BGR2GRAY); // Pasamos la imagen de color a escala de grises 
 	grayThresh = cvCloneImage( gray ); // Copiamos la imagen en escala de grises
 	
-	cvNamedWindow("src", 1 ); 
-	cvShowImage("src", src ); // Representamos la imagen de color 
+	cvNamedWindow("Imagen a color original", 1 ); 
+	cvShowImage("Imagen a color original", src ); // Representamos la imagen de color 
 
-	cvNamedWindow("gray", 1 ); 
-	cvShowImage("gray", gray ); // Representamos la imagen de intensidad
+	cvNamedWindow("Imagen original a escala de grises", 1 ); 
+	cvShowImage("Imagen original a escala de grises", gray ); // Representamos la imagen a escala de grises
 
 	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
-	cvNamedWindow("colorThresh", 1 );
-	cvShowImage("colorThresh", colorThresh ); // Representamos la imagen de color binarizada 
+	cvNamedWindow("Imagen a color binarizada", 1 );
+	cvShowImage("Imagen a color binarizada", colorThresh ); // Representamos la imagen de color binarizada 
 
 	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
-	cvNamedWindow("grayThresh", 1 );
-	cvShowImage("grayThresh", grayThresh ); // Representamosla imagen de intensidad binarizada 
+	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
+	cvShowImage("Imagen a escala de grises binarizada", grayThresh ); // Representamosla imagen a escala de grises binarizada 
 	
 	fin = clock();
 	cout << "\t\tTiempo transcurrido en binarizar: " 
@@ -159,6 +160,7 @@ void histograma()
 
 	if (DEBUG)
 	{
+		// Salida de las matrices normalizadas
 		cout << "B(norm) = "<< endl << " "  << b_hist << endl << endl;
 		cout << "G(norm) = "<< endl << " "  << g_hist << endl << endl;
 		cout << "R(norm) = "<< endl << " "  << r_hist << endl << endl; 
