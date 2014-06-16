@@ -1,15 +1,16 @@
 #include "stdafx.h"
 
+// Includes OpenCV
 #include "opencv2/opencv.hpp"
 #include "opencv2/gpu/gpu.hpp"
-
-//includes histograma
 #include "opencv2/highgui/highgui.hpp" 
 #include "opencv2/imgproc/imgproc.hpp" 
 
+// Includes C++
 #include <iostream> 
 #include <stdio.h> 
 
+// Includes C
 #include <time.h>
 
 // Indica los namespaces ques se estan usando para que la sintaxis quede mas limpia
@@ -69,10 +70,10 @@ void binarizacionParalelo(int p)
 	clock_t inicio, fin;
 	inicio = clock();
 
-	IplImage* src; // Imagen de color base 
-	IplImage* colorThresh; // Contendrá la imagen de color binarizada 
-	IplImage* gray; // Contendrá la imagen convertida en escala de grises 
-	IplImage* grayThresh; // Imagen binaria conseguida a partir de la imagen en escala de grises 
+	GpuMat color; // Imagen de color base 
+	GpuMat colorThresh; // Contendrá la imagen de color binarizada 
+	GpuMat gray; // Contendrá la imagen convertida en escala de grises 
+	GpuMat grayThresh; // Imagen binaria conseguida a partir de la imagen en escala de grises 
 
 	int threshold;
 	if(p > 0 && p <255)
@@ -81,26 +82,27 @@ void binarizacionParalelo(int p)
 		threshold = 160; // Definimos el valor umbral
 	int maxValue = 255; // Definimos el valor máximo 
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
-	src = cvLoadImage(PATH_IMAGEN, 1); // Cargamos imagen de color 
-	colorThresh = cvCloneImage( src ); // Copiamos esa imagen de color 
-	gray = cvCreateImage( cvSize(src->width, src->height), IPL_DEPTH_8U, 1 ); 
-		// La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
-	cvCvtColor( src, gray, CV_BGR2GRAY ); // Pasamos la imagen de color a escala de grises 
-	grayThresh = cvCloneImage( gray ); // Copiamos la imagen en escala de grises
+
+	Mat src = imread(PATH_IMAGEN, CV_LOAD_IMAGE_UNCHANGED); // Imagen cargada
+	color.upload(src);
+	Mat srcGray = imread(PATH_IMAGEN, CV_LOAD_IMAGE_GRAYSCALE);
+	gray.upload(srcGray);
+
+	cvNamedWindow("Imagen a color original", 1 ); 
+	imshow("Imagen a color original", src ); // Representamos la imagen de color 
+
+	cvNamedWindow("Imagen original a escala de grises", 1 ); 
+	imshow("Imagen original a escala de grises", srcGray ); // Representamos la imagen de intensidad
 	
-	cvNamedWindow("src", 1 ); 
-	cvShowImage("src", src ); // Representamos la imagen de color 
-
-	cvNamedWindow("gray", 1 ); 
-	cvShowImage("gray", gray ); // Representamos la imagen de intensidad
-
-	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
-	cvNamedWindow("colorThresh", 1 );
-	cvShowImage("colorThresh", colorThresh ); // Representamos la imagen de color binarizada 
-
-	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
-	cvNamedWindow("grayThresh", 1 );
-	cvShowImage("grayThresh", grayThresh ); // Representamosla imagen de intensidad binarizada 
+	gpu::threshold(color, colorThresh, (double)threshold, (double)maxValue, thresholdType); // Binarizamos la imagen de color 
+	Mat colBin(colorThresh);
+	cvNamedWindow("Imagen a color binarizada", 1 );
+	imshow("Imagen a color binarizada", colBin); // Representamos la imagen de color binarizada 
+	
+	gpu::threshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
+	Mat grayBin(grayThresh);
+	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
+	imshow("Imagen a escala de grises binarizada", grayBin ); // Representamosla imagen de intensidad binarizada 
 	
 	fin = clock();
 	cout << "\t\tTiempo transcurrido en binarizar: " 
@@ -110,10 +112,14 @@ void binarizacionParalelo(int p)
 	
 	// Destruimos las ventanas y eliminamos las imagenes
 	cvDestroyAllWindows();
-	cvReleaseImage( &src );
-	cvReleaseImage( &colorThresh );
-	cvReleaseImage( &gray );
-	cvReleaseImage( &grayThresh );
+	src.release();
+	color.release();
+	colorThresh.release();
+	srcGray.release();
+	gray.release();
+	grayThresh.release();
+	//colBin.release();
+	grayBin.release();
 }
 
 /*
