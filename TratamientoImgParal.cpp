@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 
 #include "opencv2/opencv.hpp"
@@ -23,6 +24,8 @@ void histogramaParalelo();
 void info();
 
 const char* PATH_IMAGEN = "C:/lena_std.tif"; // Constante global que indica la ruta de la imagen
+const char* PATH_IMAGEN_8BIT = "C:/lena512_8bit.jpg"; // Imagen de 8 bits (color)
+const bool DEBUG = true;
 
 int main()
 {
@@ -138,46 +141,75 @@ void histogramaParalelo()
 	GpuMat g_src(bgr_planes[1]);
 	GpuMat r_src(bgr_planes[2]);
 
-	// Se establece el contador 
-	int histSize = 256;
+	GpuMat b_hist_gpu, g_hist_gpu, r_hist_gpu, b1, b2, b3;
+	cv::gpu::Stream s1 = Stream::Null();
+	cv::gpu::Stream s2 = Stream::Null();
+	cv::gpu::Stream s3 = Stream::Null();
 
-	GpuMat b_hist_gpu, g_hist_gpu, r_hist_gpu;
-	
 	// Se calculan los histogramas
-	cv::gpu::calcHist(b_src, b_hist_gpu);
-	cv::gpu::calcHist(g_src, g_hist_gpu);
-	cv::gpu::calcHist(r_src, r_hist_gpu);
+	cv::gpu::calcHist(b_src, b_hist_gpu, b1, s1);
+	cv::gpu::calcHist(g_src, g_hist_gpu, b2, s2);
+	cv::gpu::calcHist(r_src, r_hist_gpu, b3, s3);
 
 	//Se vuelven a comvertir en Matrices normales tras calcular sus histogramas
-	Mat b_hist(b_hist_gpu);
-	Mat g_hist(g_hist_gpu);
-	Mat r_hist(r_hist_gpu);
+	Mat b_hist_temp(b_hist_gpu);
+	Mat g_hist_temp(g_hist_gpu);
+	Mat r_hist_temp(r_hist_gpu);
+	Mat b_hist, g_hist, r_hist;
+
+	if (DEBUG) {
+		// Salida de los histogramas
+		cout << "B = "<< endl << " "  << b_hist_temp << endl << endl;
+		cout << "G = "<< endl << " "  << g_hist_temp << endl << endl;
+		cout << "R = "<< endl << " "  << r_hist_temp << endl << endl; 
+	}
+
+	//Se trasponen las matrices para que se pueda dibuhar el histograma correctamente
+	cv::transpose(b_hist_temp, b_hist);
+	cv::transpose(g_hist_temp, g_hist);
+	cv::transpose(r_hist_temp, r_hist);
+
+	if (DEBUG) {
+		// Salida de las matrices traspuestas del histograma
+		cout << "B(t) = "<< endl << " "  << b_hist << endl << endl;
+		cout << "G(t) = "<< endl << " "  << g_hist << endl << endl;
+		cout << "R(t) = "<< endl << " "  << r_hist << endl << endl; 
+	}
 
 	// Se dibuja el histograma 
+	int histSize = 256;
 	int hist_w = 512; 
 	int hist_h = 400;
 	int bin_w = cvRound( ((double) hist_w)/((double)histSize) );
 
-	cv::Mat histImage( hist_h, hist_w, CV_8UC3, cv::Scalar( 0,0,0) ); 
-
+	cv::Mat histImage( hist_h, hist_w, CV_8UC3, cv::Scalar( 0,0,0) );
+	
 	cv::normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 	cv::normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 	cv::normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 
-	// Dibuja para cada canal de RGB 
+	if (DEBUG) {
+		// Salida de los histogramas normalizados
+		cout << "B(norm) = "<< endl << " "  << b_hist << endl << endl;
+		cout << "G(norm) = "<< endl << " "  << g_hist << endl << endl;
+		cout << "R(norm) = "<< endl << " "  << r_hist << endl << endl; 
+	}
+	
+
+	// Se dibuja para cada canal de RGB 
 	for(int i = 1; i < histSize; i++ )
 	{
-		cv::line( histImage,
-			Point( bin_w*(i-1), hist_h - cvRound(b_hist.at<float>(i-1)) ), 
+		cv::line( histImage, 
+			Point( bin_w*(i-1), hist_h - cvRound(b_hist.at<float>(i-1)) ),
 			Point( bin_w*(i), hist_h - cvRound(b_hist.at<float>(i)) ), 
 			Scalar( 255, 0, 0), 2,8, 0 );
 		cv::line( histImage, 
-			Point( bin_w*(i-1), hist_h - cvRound(g_hist.at<float>(i-1)) ), 
-			Point( bin_w*(i), hist_h - cvRound(g_hist.at<float>(i)) ), 
+			Point( bin_w*(i-1), hist_h - cvRound(g_hist.at<float>(i-1)) ),
+			Point( bin_w*(i), hist_h - cvRound(g_hist.at<float>(i)) ),
 			Scalar( 0, 255, 0), 2, 8,0 );
 		cv::line( histImage, 
-			Point( bin_w*(i-1), hist_h - cvRound(r_hist.at<float>(i-1)) ), 
-			Point( bin_w*(i), hist_h - cvRound(r_hist.at<float>(i)) ), 
+			Point( bin_w*(i-1), hist_h - cvRound(r_hist.at<float>(i-1)) ),
+			Point( bin_w*(i), hist_h - cvRound(r_hist.at<float>(i)) ),
 			Scalar( 0, 0, 255), 2, 8, 0 );
 	}
 
