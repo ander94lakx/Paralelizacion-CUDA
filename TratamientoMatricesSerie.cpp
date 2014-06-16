@@ -5,7 +5,6 @@
 
 using namespace std;
 
-void sumasYProductosMatrices();
 float** rellenarMatriz(int tamano);
 void sumarMatrices(float **matriz1, float **matriz2, int tamano);
 void multiplicarMatrices(float **matriz1, float **matriz2, int tamano);
@@ -14,14 +13,8 @@ void imprimirMatriz(float **matriz, int tamano);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	sumasYProductosMatrices();
-	getchar();
-	return 0;
-}
-
-void sumasYProductosMatrices()
-{
 	clock_t inicio, fin, inicioGeneral, finGeneral;
+
 	/*
 		srand() sirve para cambiar la semilla (numero) que se utiliza para generar los numeros
 		aleatorios. Al pasarle como parametro una llamada a la funcion time(), que obtiene el
@@ -36,7 +29,7 @@ void sumasYProductosMatrices()
 	const int tam4 = 500;
 	const int tam5 = 700;
 	const int tam6 = 1000;
-	const int tam7 = 3000;
+	const int tam7 = 2000;
 	
 	cout << "INICIO DE LA CARGA DE MATRICES" << endl;
 	inicio = clock();
@@ -62,113 +55,113 @@ void sumasYProductosMatrices()
 
 	inicioGeneral = clock();
 
-			// PRUEBAS 10x10
+	// PRUEBAS 10x10
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 10x10 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 10x10 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 10x10 elementos" << endl;
-			sumarMatrices(matriz1a, matriz1b, tam1);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tSuma de matrices de 10x10 elementos" << endl;
+	sumarMatrices(matriz1a, matriz1b, tam1);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			inicio = clock();
-			cout << "\tProducto de matrices de 10x10 elementos" << endl;
-			multiplicarMatrices(matriz1a, matriz1b, tam1);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tProducto de matrices de 10x10 elementos" << endl;
+	multiplicarMatrices(matriz1a, matriz1b, tam1);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			// PRUEBAS 100x100
+	// PRUEBAS 100x100
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 100x100 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 100x100 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 100x100 elementos" << endl;
-			sumarMatrices(matriz2a, matriz2b, tam2);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tSuma de matrices de 100x100 elementos" << endl;
+	sumarMatrices(matriz2a, matriz2b, tam2);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			inicio = clock();
-			cout << "\tProducto de matrices de 100x100 elementos" << endl;
-			multiplicarMatrices(matriz2a, matriz2b, tam2);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tProducto de matrices de 100x100 elementos" << endl;
+	multiplicarMatrices(matriz2a, matriz2b, tam2);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			// PRUEBAS 300x300
+	// PRUEBAS 300x300
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 300x300 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 300x300 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 300x300 elementos" << endl;
-			sumarMatrices(matriz3a, matriz3b, tam3);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tSuma de matrices de 300x300 elementos" << endl;
+	sumarMatrices(matriz3a, matriz3b, tam3);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			inicio = clock();
-			cout << "\tProducto de matrices de 300x300 elementos" << endl;
-			multiplicarMatrices(matriz3a, matriz3b, tam3);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tProducto de matrices de 300x300 elementos" << endl;
+	multiplicarMatrices(matriz3a, matriz3b, tam3);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			// PRUEBAS 500x500
+	// PRUEBAS 500x500
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 500x500 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 500x500 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 500x500 elementos" << endl;
-			sumarMatrices(matriz4a, matriz4b, tam4);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tSuma de matrices de 500x500 elementos" << endl;
+	sumarMatrices(matriz4a, matriz4b, tam4);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			cout << "\tProducto de matrices de 500x500 elementos" << endl;
-			multiplicarMatrices(matriz4a, matriz4b, tam4);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tProducto de matrices de 500x500 elementos" << endl;
+	multiplicarMatrices(matriz4a, matriz4b, tam4);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			// PRUEBAS 700x700
+	// PRUEBAS 700x700
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 700x700 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 700x700 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 700x700 elementos" << endl;
-			sumarMatrices(matriz5a, matriz5b, tam5);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tSuma de matrices de 700x700 elementos" << endl;
+	sumarMatrices(matriz5a, matriz5b, tam5);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			inicio = clock();
-			cout << "\tProducto de matrices de 700x700 elementos" << endl;
-			multiplicarMatrices(matriz5a, matriz5b, tam5);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+	inicio = clock();
+	cout << "\tProducto de matrices de 700x700 elementos" << endl;
+	multiplicarMatrices(matriz5a, matriz5b, tam5);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			// PRUEBAS 1000x1000
+	// PRUEBAS 1000x1000
 
-			cout << endl;
-			cout << "PRUEBAS CON MATRICES DE 1000x1000 ELEMENTOS" << endl;
-			cout << endl; cout << endl;
+	cout << endl;
+	cout << "PRUEBAS CON MATRICES DE 1000x1000 ELEMENTOS" << endl;
+	cout << endl; cout << endl;
+	
+	inicio = clock();
+	cout << "\tSuma de matrices de 1000x1000 elementos" << endl;
+	sumarMatrices(matriz6a, matriz6b, tam6);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
-			inicio = clock();
-			cout << "\tSuma de matrices de 1000x1000 elementos" << endl;
-			sumarMatrices(matriz6a, matriz6b, tam6);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
-
-			inicio = clock();
-			cout << "\tProducto de matrices de 1000x1000 elementos" << endl;
-			multiplicarMatrices(matriz6a, matriz6b, tam6);
-			fin = clock();
-			cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
-
+	inicio = clock();
+	cout << "\tProducto de matrices de 1000x1000 elementos" << endl;
+	multiplicarMatrices(matriz6a, matriz6b, tam6);
+	fin = clock();
+	cout << "\t\tTiempo transcurrido: " << (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 			
 	finGeneral = clock();
 
@@ -177,6 +170,8 @@ void sumasYProductosMatrices()
 	cout << "Tiempo transcurrido en la ejecucion de las pruebas: " << endl;
 	cout << (finGeneral-inicioGeneral)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
+	getchar();
+	return 0;
 }
 
 float** rellenarMatriz(int tamano)
@@ -213,7 +208,6 @@ float** rellenarMatriz(int tamano)
 	/* Se puede llamar a un metodo imprimirMatriz para comprobar que realmente se estan 
 		introduciendo valores numericos en la matriz */
 
-	//imprimirMatriz(matriz, tamano);
 	return matriz;
 }
 
