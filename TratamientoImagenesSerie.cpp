@@ -1,10 +1,14 @@
 #include "stdafx.h"
 
+// Includes OpenCV
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp" 
 #include "opencv2/imgproc/imgproc.hpp" 
 
-#include <iostream> 
+// Includes C++
+#include <iostream>
+
+// Includes C
 #include <stdio.h> 
 #include <time.h>
 
