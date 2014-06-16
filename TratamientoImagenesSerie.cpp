@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 
 #include "opencv2/opencv.hpp"
@@ -17,6 +18,7 @@ void binarizacion(int p);
 void histograma();
 
 const char* PATH_IMAGEN = "C:/lena_std.tif"; // Constante global que indica la ruta de la imagen
+const bool DEBUG = true;
 
 int main()
 {
@@ -134,10 +136,16 @@ void histograma()
 
 	cv::Mat b_hist, g_hist, r_hist;
 
-	//Se alculan los histogramas
+	//Se calculan los histogramas
 	calcHist( &bgr_planes[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate );
+	if (DEBUG)
+	{
+		cout << "B = "<< endl << " "  << b_hist << endl << endl;
+		cout << "G = "<< endl << " "  << g_hist << endl << endl;
+		cout << "R = "<< endl << " "  << r_hist << endl << endl; 
+	}
 
 	// Se dibuja el histograma 
 	int hist_w = 512; int hist_h = 400;
@@ -148,6 +156,13 @@ void histograma()
 	cv::normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 	cv::normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
 	cv::normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat() );
+
+	if (DEBUG)
+	{
+		cout << "B(norm) = "<< endl << " "  << b_hist << endl << endl;
+		cout << "G(norm) = "<< endl << " "  << g_hist << endl << endl;
+		cout << "R(norm) = "<< endl << " "  << r_hist << endl << endl; 
+	}
 
 	// Se dibuja para cada canal de RGB 
 	for(int i = 1; i < histSize; i++ )
