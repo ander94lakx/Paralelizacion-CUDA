@@ -60,7 +60,7 @@ void binarizacion()
 */
 void binarizacion(int p)
 {
-	clock_t inicio, fin;
+	clock_t inicio, fin, inicioBin, finBin;
 	inicio = clock();
 
 	IplImage* src; // Imagen de color base 
@@ -89,16 +89,30 @@ void binarizacion(int p)
 	cvNamedWindow("Imagen original a escala de grises", 1 ); 
 	cvShowImage("Imagen original a escala de grises", gray ); // Representamos la imagen a escala de grises
 
+	inicioBin = clock();
+
 	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
+
+	finBin = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
+		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+
 	cvNamedWindow("Imagen a color binarizada", 1 );
 	cvShowImage("Imagen a color binarizada", colorThresh ); // Representamos la imagen de color binarizada 
 
+	inicioBin = clock();
+
 	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
+
+	finBin = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen en grises: " 
+		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+
 	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
 	cvShowImage("Imagen a escala de grises binarizada", grayThresh ); // Representamosla imagen a escala de grises binarizada 
 	
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en binarizar: " 
+	cout << "\t\tTiempo TOTAL transcurrido en binarizar: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar 
@@ -117,7 +131,7 @@ void binarizacion(int p)
 */
 void histograma()
 {
-	clock_t inicio, fin;
+	clock_t inicio, fin, inicioCalcHist, finCalcHist;
 	inicio = clock();
 
 	// Se carga la imagen 
@@ -140,10 +154,16 @@ void histograma()
 
 	cv::Mat b_hist, g_hist, r_hist;
 
+	inicioCalcHist = clock();
+
 	//Se calculan los histogramas
 	calcHist( &bgr_planes[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate );
 	calcHist( &bgr_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate );
+
+	finCalcHist = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion del calculo del histograma: " 
+		<< (finCalcHist-inicioCalcHist)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	if (DEBUG){
 		//Salida de los histogramas
@@ -192,7 +212,7 @@ void histograma()
 	cv::imshow("Imagen", src );
 
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en calcular el histograma: " 
+	cout << "\t\tTiempo TOTAL transcurrido en calculary mostrar el histograma: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar
