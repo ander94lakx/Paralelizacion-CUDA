@@ -67,7 +67,7 @@ void binarizacionParalelo()
  */
 void binarizacionParalelo(int p)
 {
-	clock_t inicio, fin;
+	clock_t inicio, fin, inicioBin, finBin;
 	inicio = clock();
 
 	GpuMat color; // Imagen de color base 
@@ -93,19 +93,31 @@ void binarizacionParalelo(int p)
 
 	cvNamedWindow("Imagen original a escala de grises", 1 ); 
 	imshow("Imagen original a escala de grises", srcGray ); // Representamos la imagen de intensidad
-	
+
+	inicioBin = clock();
+
 	gpu::threshold(color, colorThresh, (double)threshold, (double)maxValue, thresholdType); // Binarizamos la imagen de color 
 	Mat colBin(colorThresh);
 	cvNamedWindow("Imagen a color binarizada", 1 );
 	imshow("Imagen a color binarizada", colBin); // Representamos la imagen de color binarizada 
 	
+	finBin = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
+		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
+
+	inicioBin = clock();
+
 	gpu::threshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
 	Mat grayBin(grayThresh);
 	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
 	imshow("Imagen a escala de grises binarizada", grayBin ); // Representamosla imagen de intensidad binarizada 
+
+	finBin = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
+		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 	
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en binarizar: " 
+	cout << "\t\tTiempo TOTAL transcurrido en binarizar: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar 
@@ -118,7 +130,7 @@ void binarizacionParalelo(int p)
 	srcGray.release();
 	gray.release();
 	grayThresh.release();
-	//colBin.release();
+	colBin.release();
 	grayBin.release();
 }
 
@@ -130,7 +142,7 @@ void binarizacionParalelo(int p)
  */
 void histogramaParalelo()
 {
-	clock_t inicio, fin;
+	clock_t inicio, fin, inicioCalcHist, finCalcHist;
 	inicio = clock();
 
 	// Se cargar imagen 
@@ -151,10 +163,16 @@ void histogramaParalelo()
 	cv::gpu::Stream s2 = Stream::Null();
 	cv::gpu::Stream s3 = Stream::Null();
 
+	inicioCalcHist = clock();
+
 	// Se calculan los histogramas
 	cv::gpu::calcHist(b_src, b_hist_gpu, b1, s1);
 	cv::gpu::calcHist(g_src, g_hist_gpu, b2, s2);
 	cv::gpu::calcHist(r_src, r_hist_gpu, b3, s3);
+
+	finCalcHist = clock();
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion del calculo del histograma: " 
+		<< (finCalcHist-inicioCalcHist)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	//Se vuelven a comvertir en Matrices normales tras calcular sus histogramas
 	Mat b_hist_temp(b_hist_gpu);
@@ -223,7 +241,7 @@ void histogramaParalelo()
 	cv::imshow("Imagen", src );
 
 	fin = clock();
-	cout << "\t\tTiempo transcurrido en calcular el histograma: " 
+	cout << "\t\tTiempo TOTAL transcurrido en calcular y mostrar el histograma: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar
