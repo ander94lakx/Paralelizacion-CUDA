@@ -63,8 +63,7 @@ void binarizacion(int p)
 	clock_t inicio, fin, inicioBin, finBin;
 	inicio = clock();
 
-	IplImage* src; // Imagen de color base 
-	IplImage* colorThresh; // Contendrá la imagen de color binarizada 
+	IplImage* src; // Imagen de color base  
 	IplImage* gray; // Contendrá la imagen convertida en escala de grises 
 	IplImage* grayThresh; // Imagen binaria conseguida a partir de la imagen en escala de grises 
 
@@ -77,7 +76,6 @@ void binarizacion(int p)
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
 
 	src = cvLoadImage(PATH_IMAGEN, CV_LOAD_IMAGE_COLOR); // Cargamos la imagen de color 
-	colorThresh = cvCloneImage(src); // Copiamos esa imagen de color 
 	gray = cvCreateImage(cvSize(src->width, src->height), IPL_DEPTH_8U, 1); 
 		// La imagen de intensidad tendrá la misma configuración que la fuente pero con un solo canal 
 	cvCvtColor(src, gray, CV_BGR2GRAY); // Pasamos la imagen de color a escala de grises 
@@ -86,26 +84,12 @@ void binarizacion(int p)
 	cvNamedWindow("Imagen a color original", 1 ); 
 	cvShowImage("Imagen a color original", src ); // Representamos la imagen de color 
 
-	cvNamedWindow("Imagen original a escala de grises", 1 ); 
-	cvShowImage("Imagen original a escala de grises", gray ); // Representamos la imagen a escala de grises
-
-	inicioBin = clock();
-
-	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
-
-	finBin = clock();
-	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
-		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
-
-	cvNamedWindow("Imagen a color binarizada", 1 );
-	cvShowImage("Imagen a color binarizada", colorThresh ); // Representamos la imagen de color binarizada 
-
 	inicioBin = clock();
 
 	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
 
 	finBin = clock();
-	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen en grises: " 
+	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion: " 
 		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
@@ -120,7 +104,6 @@ void binarizacion(int p)
 	// Destruimos las ventanas y eliminamos las imagenes
 	cvDestroyAllWindows();
 	cvReleaseImage( &src );
-	cvReleaseImage( &colorThresh );
 	cvReleaseImage( &gray );
 	cvReleaseImage( &grayThresh );
 	
