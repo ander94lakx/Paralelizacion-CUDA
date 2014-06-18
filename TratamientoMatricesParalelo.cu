@@ -9,7 +9,17 @@
 #include <stdio.h>
 #include <time.h>
 
-#define BLOCK_SIZE 4
+/*
+ * Esto controla el numero de threads por bloque que se utiliza
+ * 
+ * Cuanto mas se utilicem mas rapido y com mayor paralelismo se realizara la ejecucuion
+ * En el caso de una GPU GeForce GT 720M con 96 nucleos CUDA el valor optimo corresponderia a 96, que indicaria
+ * que estamos haciendo uso de todos los nucleos CUDA
+ */
+//#define BLOCK_SIZE 4
+//#define BLOCK_SIZE 24
+//#define BLOCK_SIZE 48
+#define BLOCK_SIZE 96
 
 using namespace std;
 
@@ -32,6 +42,7 @@ __global__ void Multiplica_Matrices_GM(float *C, float *A, float *B, int nfil, i
 		C[index] = sum;
 	}
 }
+
 /*
  * El kernel que se encarga de realiazar las sumas con la GPU
  *
@@ -151,6 +162,8 @@ int main()
 	ejecutarPruebas(700);
 	printf("Inicio de las pruebas con 1000 elementos\n\n");
 	ejecutarPruebas(1000);
+	printf("Inicio de las pruebas con 3000 elementos\n\n");
+	ejecutarPruebas(3000);
 
 	finGeneral = clock();
 
