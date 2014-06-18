@@ -70,8 +70,6 @@ void binarizacionParalelo(int p)
 	clock_t inicio, fin, inicioBin, finBin;
 	inicio = clock();
 
-	GpuMat color; // Imagen de color base 
-	GpuMat colorThresh; // Contendrá la imagen de color binarizada 
 	GpuMat gray; // Contendrá la imagen convertida en escala de grises 
 	GpuMat grayThresh; // Imagen binaria conseguida a partir de la imagen en escala de grises 
 
@@ -84,36 +82,21 @@ void binarizacionParalelo(int p)
 	int thresholdType = CV_THRESH_BINARY; // Definimos el tipo de binarización 
 
 	Mat src = imread(PATH_IMAGEN, CV_LOAD_IMAGE_UNCHANGED); // Imagen cargada
-	color.upload(src);
 	Mat srcGray = imread(PATH_IMAGEN, CV_LOAD_IMAGE_GRAYSCALE);
 	gray.upload(srcGray);
 
 	cvNamedWindow("Imagen a color original", 1 ); 
 	imshow("Imagen a color original", src ); // Representamos la imagen de color 
 
-	cvNamedWindow("Imagen original a escala de grises", 1 ); 
-	imshow("Imagen original a escala de grises", srcGray ); // Representamos la imagen de intensidad
-
-	inicioBin = clock();
-
-	gpu::threshold(color, colorThresh, (double)threshold, (double)maxValue, thresholdType); // Binarizamos la imagen de color 
-	Mat colBin(colorThresh);
-	cvNamedWindow("Imagen a color binarizada", 1 );
-	imshow("Imagen a color binarizada", colBin); // Representamos la imagen de color binarizada 
-	
-	finBin = clock();
-	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
-		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
-
 	inicioBin = clock();
 
 	gpu::threshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
 	Mat grayBin(grayThresh);
-	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
-	imshow("Imagen a escala de grises binarizada", grayBin ); // Representamosla imagen de intensidad binarizada 
+	cvNamedWindow("Imagen binarizada", 1 );
+	imshow("Imagen binarizada", grayBin ); // Representamosla imagen de intensidad binarizada 
 
 	finBin = clock();
-	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
+	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen: " 
 		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 	
 	fin = clock();
@@ -125,12 +108,9 @@ void binarizacionParalelo(int p)
 	// Destruimos las ventanas y eliminamos las imagenes
 	cvDestroyAllWindows();
 	src.release();
-	color.release();
-	colorThresh.release();
 	srcGray.release();
 	gray.release();
 	grayThresh.release();
-	colBin.release();
 	grayBin.release();
 }
 
@@ -251,28 +231,17 @@ void histogramaParalelo()
 	src.release(); 
 	histImage.release();
 }
+
 /*
  * Muestra la info de la GPU y prueba el procesamiento de imagenes con la GPU y OpenCV
  * En caso de haber varias GPU utiliza la que el sistema use por defecto
  */
 void info()
 {
+	cout << endl; gpu::printCudaDeviceInfo(0); cout << endl;
 	DeviceInfo info = gpu::DeviceInfo();
-	int minVersion = info.minorVersion();
-	int maxVersion = info.majorVersion();
-	size_t totalMemory = info.totalMemory();
-	string name = info.name();
-	int numProcs = info.multiProcessorCount();
-	int id = info.deviceID();
-
-	cout << "Informacion de la GPU:" << endl;
-	cout << "\tNombre: " + name << endl;
-	cout << "\tID: " + to_string(id) << endl;
-	cout << "\tVersion minima: " + to_string(minVersion) << endl;
-	cout << "\tVersion maxima: " + to_string(maxVersion) << endl;
-	cout << "\tMemoria total: " + to_string(totalMemory/1024/1024) + " MB" << endl;
-	cout << "\tNumero de procesadores: " + to_string(numProcs) << endl << endl;
-	cout << "Prueba de tratamiento de imagen con la GPU y openCV:" << endl << endl;
+	cout << "\tEl hardware grafico es compatible con el modulo gpu de OpenCV: ";
+	if(info.isCompatible()) cout << "SI" << endl; else cout << "NO" << endl;
 	
 	// Prueba
 	Mat src = imread("C:/lena_std.tif", 0);
@@ -283,7 +252,7 @@ void info()
 	Mat dst(d_dst);
 	imshow("Original",src);
 	imshow("Canny GPU",dst);
-
+	
 	cvWaitKey(0);
 	cvDestroyAllWindows();
 }
