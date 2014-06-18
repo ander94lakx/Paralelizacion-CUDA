@@ -94,7 +94,7 @@ void binarizacion(int p)
 	cvThreshold(src, colorThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen de color 
 
 	finBin = clock();
-	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
+	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen a color: " 
 		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvNamedWindow("Imagen a color binarizada", 1 );
@@ -105,14 +105,14 @@ void binarizacion(int p)
 	cvThreshold(gray, grayThresh, threshold, maxValue, thresholdType); // Binarizamos la imagen en escala de grises 
 
 	finBin = clock();
-	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen en grises: " 
+	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion de binarizacion de la imagen en grises: " 
 		<< (finBin-inicioBin)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvNamedWindow("Imagen a escala de grises binarizada", 1 );
 	cvShowImage("Imagen a escala de grises binarizada", grayThresh ); // Representamosla imagen a escala de grises binarizada 
 	
 	fin = clock();
-	cout << "\t\tTiempo TOTAL transcurrido en binarizar: " 
+	cout << "\tTiempo TOTAL transcurrido en binarizar: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar 
@@ -162,7 +162,7 @@ void histograma()
 	calcHist( &bgr_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate );
 
 	finCalcHist = clock();
-	cout << "\t\tTiempo transcurrido ESPECIFICAMENTE en la operacion del calculo del histograma: " 
+	cout << "\tTiempo transcurrido ESPECIFICAMENTE en la operacion del calculo del histograma: " 
 		<< (finCalcHist-inicioCalcHist)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	if (DEBUG){
@@ -212,7 +212,7 @@ void histograma()
 	cv::imshow("Imagen", src );
 
 	fin = clock();
-	cout << "\t\tTiempo TOTAL transcurrido en calculary mostrar el histograma: " 
+	cout << "\tTiempo TOTAL transcurrido en calculary mostrar el histograma: " 
 		<< (fin-inicio)/(double)CLOCKS_PER_SEC << " segundos\n\n" << endl;
 
 	cvWaitKey(0); // Pulsamos una tecla para terminar
