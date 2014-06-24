@@ -1,7 +1,9 @@
 Paralelizacion-CUDA
 ===================
 
-Pruebas con paralelizacion con la GPU usando CUDA y C/C++
+Pruebas con paralelizacion de operaciones con matrices y procesamiento de imagenes con la GPU usando CUDA y C/C++
+
+Realizado por Ander Granado y David Zamora
 
 Proyectos terminados (Proyectos en Visual Studio + Codigo fuente por separado (version sin comentar + version comentada)):
 https://www.dropbox.com/s/lx2qjtr6be3rbpv/Paralelizacion%20C%2B%2B%20CUDA%20FINAL.zip
