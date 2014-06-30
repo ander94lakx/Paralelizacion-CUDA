@@ -1,4 +1,4 @@
-Paralelizacion-CUDA
+Paralelización en C/C++ con CUDA
 ===================
 
 Pruebas con paralelizacion de operaciones con matrices y procesamiento de imagenes con la GPU usando CUDA y C/C++
