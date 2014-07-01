@@ -1,11 +1,13 @@
 Paralelización en C/C++ con CUDA
 ===================
 
-Pruebas con paralelizacion de operaciones con matrices y procesamiento de imagenes con la GPU usando CUDA y C/C++
+Pruebas de programación paralela y GPGPU basadas en operaciones con matrices y procesamiento de imagenes.
 
-Realizado por Ander Granado y David Zamora
+Para las pruebas se ha hecho uso de la plataforma CUDA, programacion en C/C++ y una GPU Nvidia Geforce GT720M.
 
-El codigo tiene licencia GNU GPL v2 (ver el archivo LICENSE)
+Realizado por Ander Granado y David Zamora.
+
+El código tiene licencia GNU GPL v2 (ver el archivo LICENSE), que permite libremente usar, modificar y distribuir el código por parte de cualquier usuario.
 
 Enlace a los proyectos terminados. Incluye proyectos en Visual Studio, codigo fuente por separado tanto comentado detalladamente como sin comentar:
 
